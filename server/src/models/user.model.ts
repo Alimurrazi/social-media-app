@@ -1,14 +1,15 @@
+
 import {
-  AnyObject,
+//  AnyObject,
   Document,
   EnforceDocument,
-  LeanDocument,
+//  LeanDocument,
   model,
   Model,
   QueryWithHelpers,
   Schema,
   Types,
-  _AllowStringsForIds,
+ // _AllowStringsForIds,
 } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
@@ -60,7 +61,11 @@ export type IUserQueryWithHelper = QueryWithHelpers<
 /**
  * Moogoose DB general IUser parameter type.
  */
-export type IUserLeanDoc = IUser | _AllowStringsForIds<LeanDocument<IUser>> | AnyObject;
+
+// TODO: Need to declare IUserLeanDoc properly;
+
+// export type IUserLeanDoc = IUser | _AllowStringsForIds<LeanDocument<IUser>> | AnyObject;
+export type IUserLeanDoc = IUser;
 
 const userSchema = new Schema<IUser, IUserModel>(
   {

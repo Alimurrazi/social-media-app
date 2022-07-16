@@ -13,6 +13,3 @@ coverage
 
 # babel out-dir
 dist
-
-# vs-code dir
-.vscode

@@ -13,11 +13,21 @@ components:
         role:
           type: string
           enum: [user, admin]
+        followers:
+          type: array
+          items:
+            type: string
+        followings:
+          type: array
+          items:
+            type: string
       example:
         id: 5ebac534954b54139806c112
         email: fake@example.com
         name: fake name
         role: user
+        followers: [6ebac434754b44239806c113]
+        followings: [6ebac434754b44239806c113]
 
     Token:
       type: object

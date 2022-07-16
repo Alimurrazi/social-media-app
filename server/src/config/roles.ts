@@ -1,7 +1,7 @@
 export type RoleNames = 'admin' | 'user';
 
 const allRoles: { [key: string]: readonly string[] } = Object.freeze({
-  user: Object.freeze([]),
+  user: Object.freeze(['getUsers', 'follow']),
   admin: Object.freeze(['getUsers', 'manageUsers']),
 });
 

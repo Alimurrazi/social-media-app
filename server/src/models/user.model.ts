@@ -1,15 +1,14 @@
-
 import {
-//  AnyObject,
+  //  AnyObject,
   Document,
   EnforceDocument,
-//  LeanDocument,
+  //  LeanDocument,
   model,
   Model,
   QueryWithHelpers,
   Schema,
   Types,
- // _AllowStringsForIds,
+  // _AllowStringsForIds,
 } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
@@ -23,6 +22,8 @@ export interface IUser {
   password: string;
   role: RoleNames;
   isEmailVerified: boolean;
+  followers: Types.ObjectId[];
+  followings: Types.ObjectId[];
 }
 
 /**
@@ -37,7 +38,7 @@ export interface IUserMethods {
  */
 /* eslint-disable no-unused-vars */
 export interface IUserModel extends Model<IUser, Record<string, never>, IUserMethods> {
-  isEmailTaken: (email: string, excludeUserId?: string | Types.ObjectId) => Promise<boolean>;
+  isEmailTaken: (email: string, excludeUserId?: Types.ObjectId) => Promise<boolean>;
   paginate?: PaginationFunc<IUser, IUserMethods>;
 }
 /* eslint-enable no-unused-vars */
@@ -106,6 +107,14 @@ const userSchema = new Schema<IUser, IUserModel>(
     isEmailVerified: {
       type: Boolean,
       default: false,
+    },
+    followers: {
+      type: [Types.ObjectId],
+      default: [],
+    },
+    followings: {
+      type: [Types.ObjectId],
+      default: [],
     },
   },
   {

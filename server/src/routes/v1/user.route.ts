@@ -17,6 +17,14 @@ router
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
+router
+  .route('/')
+  .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
+  .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
+
+router.route('/:userId/follow').patch(auth('follow'), validate(userValidation.getUser), userController.followUser);
+router.route('/:userId/unfollow').patch(auth('follow'), validate(userValidation.getUser), userController.unfollowUser);
+
 export default router;
 
 /**
@@ -243,6 +251,60 @@ export default router;
  *     responses:
  *       "200":
  *         description: No content
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /users/{id}/follow:
+ *   patch:
+ *     summary: Follow a user
+ *     description: Logged in users can follow other users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User id
+ *     responses:
+ *       "200":
+ *         description: succeed
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /users/{id}/unfollow:
+ *   patch:
+ *     summary: Unfollow a user
+ *     description: Logged in users can unfollow other users.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User id
+ *     responses:
+ *       "200":
+ *         description: succeed
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

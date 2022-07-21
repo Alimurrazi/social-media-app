@@ -1,20 +1,20 @@
 import express from 'express';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
-import * as userValidation from '../../validations/user.validation';
-import * as userController from '../../controllers/user.controller';
+import * as postValidation from '../../validations/post.validation';
+import * as postController from '../../controllers/post.controller';
 
 const router = express.Router();
 
-router.route('/').post(auth('post'), validate(userValidation.createUser), userController.createUser); // createPost
+router.route('/').post(auth('post'), validate(postValidation.createPost), postController.createPost); // createPost
 
-router.route('user/:userId').get(auth('post'), validate(userValidation.getUser), userController.getUser); // getPost of a user
+router.route('user/:userId').get(auth('post'), validate(postValidation.getPosts), postController.getPost); // getPost of a user
 
-router.route(':postId').get(auth('post'), validate(userValidation.getUsers), userController.getUsers); // get specific post
-router.route(':postId').delete(auth('post'), validate(userValidation.getUsers), userController.getUsers); // delete specific post
+router.route(':postId').get(auth('post'), validate(postValidation.getPost), postController.getPost); // get specific post
+router.route(':postId').delete(auth('post'), validate(postValidation.getUsers), postController.getUsers); // delete specific post
 
-router.route('/:postId/like').patch(auth('post'), validate(userValidation.getUser), userController.followUser); // like post
-router.route('/:postId/unlike').patch(auth('post'), validate(userValidation.getUser), userController.unfollowUser); // unlike post
+router.route('/:postId/like').patch(auth('post'), validate(postValidation.getUser), postController.followUser); // like post
+router.route('/:postId/unlike').patch(auth('post'), validate(postValidation.getUser), postController.unfollowUser); // unlike post
 
 export default router;
 

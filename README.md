@@ -10,28 +10,10 @@ By running a single command, you will get a production-ready Node.js app install
 
 ## Quick Start
 
-To create a project, simply run:
-
-```bash
-npx create-nodejs-express-app <project-name>
-```
-
-Or
-
-```bash
-npm init nodejs-express-app <project-name>
-```
-
-## Manual Installation
-
-If you would still prefer to do the installation manually, follow these steps:
-
 Clone the repo:
 
 ```bash
-git clone --depth 1 https://github.com/hagopj13/node-express-boilerplate.git
-cd node-express-boilerplate
-npx rimraf ./.git
+git clone --depth 1 https://github.com/Alimurrazi/social-media-app.git
 ```
 
 Install the dependencies:

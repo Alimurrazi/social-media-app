@@ -11,27 +11,27 @@ router.route('/').post(auth('post'), validate(postValidation.createPost), postCo
 router.route('user/:userId').get(auth('post'), validate(postValidation.getPosts), postController.getPost); // getPost of a user
 
 router.route(':postId').get(auth('post'), validate(postValidation.getPost), postController.getPost); // get specific post
-router.route(':postId').delete(auth('post'), validate(postValidation.getUsers), postController.getUsers); // delete specific post
+router.route(':postId').delete(auth('post'), validate(postValidation.getPost), postController.getUsers); // delete specific post
 
-router.route('/:postId/like').patch(auth('post'), validate(postValidation.getUser), postController.followUser); // like post
-router.route('/:postId/unlike').patch(auth('post'), validate(postValidation.getUser), postController.unfollowUser); // unlike post
+router.route('/:postId/like').patch(auth('post'), validate(postValidation.getPost), postController.followUser); // like post
+router.route('/:postId/unlike').patch(auth('post'), validate(postValidation.getPost), postController.unfollowUser); // unlike post
 
 export default router;
 
 /**
  * @swagger
  * tags:
- *   name: Users
- *   description: User management and retrieval
+ *   name: Post
+ *   description: Post management
  */
 
 /**
  * @swagger
- * /users:
+ * /:
  *   post:
- *     summary: Create a user
- *     description: Only admins can create other users.
- *     tags: [Users]
+ *     summary: Create a post
+ *     description: Anyone can post.
+ *     tags: [Post]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -41,39 +41,29 @@ export default router;
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - email
- *               - password
- *               - role
+ *               - userId
+ *               - description
+ *               - img
  *             properties:
- *               name:
+ *               userId:
  *                 type: string
- *               email:
+ *                 required: true
+ *               description:
  *                 type: string
- *                 format: email
- *                 description: must be unique
- *               password:
+ *                 required: true
+ *               img:
  *                 type: string
- *                 format: password
- *                 minLength: 8
- *                 description: At least one number and one letter
- *               role:
- *                  type: string
- *                  enum: [user, admin]
  *             example:
- *               name: fake name
- *               email: fake@example.com
- *               password: password1
- *               role: user
+ *               userId: 12345678
+ *               description: this is test post
+ *               img: https://picsum.photos/200/300
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
- *       "400":
- *         $ref: '#/components/responses/DuplicateEmail'
+ *                $ref: '#/components/schemas/Post'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

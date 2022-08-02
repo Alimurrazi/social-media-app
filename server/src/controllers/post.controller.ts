@@ -4,6 +4,7 @@ import pick from '../utils/pick';
 import ApiError from '../utils/ApiError';
 import catchAsync from '../utils/catchAsync';
 import * as postService from '../services/post.service';
+import * as userService from '../services/user.service';
 import { IUser } from '../models/user.model';
 import { PaginateOptions } from '../models/plugins/paginate.plugin';
 

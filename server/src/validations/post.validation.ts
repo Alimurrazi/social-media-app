@@ -6,7 +6,7 @@ export const createPost = {
     userId: Joi.string().required().custom(objectId),
     description: Joi.string(),
     img: Joi.string(),
-    likes: Joi.array().items(Joi.string()),
+    //  likes: Joi.array().items(Joi.string()),
   }),
 };
 

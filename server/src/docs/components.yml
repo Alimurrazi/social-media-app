@@ -29,6 +29,28 @@ components:
         followers: [6ebac434754b44239806c113]
         followings: [6ebac434754b44239806c113]
 
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        description:
+          type: string
+        img:
+          type: string
+        likes:
+          type: array
+          items:
+            type: string
+      example:
+        id: 8be3e35c-0301-4aae-91fb-065169f97049
+        userId: 6ebac434754b44239806c113
+        description: Hello world
+        img: https://picsum.photos/200/300
+        likes: [6ebac434754b44239806c113]
+
     Token:
       type: object
       properties:

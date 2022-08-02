@@ -34,19 +34,28 @@ export const getUsers = catchAsync(async (req, res): Promise<void> => {
 });
 
 export const getPost = catchAsync(async (req, res): Promise<void> => {
-  const user = await userService.getUserById(Types.ObjectId(req.params.userId));
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  const post = await postService.getPostById(Types.ObjectId(req.params.postId));
+  if (!post) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
+  res.send(post);
+});
+
+export const getUserPost = catchAsync(async (req, res): Promise<void> => {
+  const post = await postService.getPostByUserId(req.query, Types.ObjectId(req.params.postId));
+  // need to return an empty array if no post found
+  if (!post) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+  }
+  res.send(post);
+});
+
+export const updatePost = catchAsync(async (req, res): Promise<void> => {
+  const user = await postService.updateUserById(Types.ObjectId(req.params.userId), req.body);
   res.send(user);
 });
 
-export const updateUser = catchAsync(async (req, res): Promise<void> => {
-  const user = await userService.updateUserById(Types.ObjectId(req.params.userId), req.body);
-  res.send(user);
-});
-
-export const deleteUser = catchAsync(async (req, res): Promise<void> => {
+export const deletePost = catchAsync(async (req, res): Promise<void> => {
   await userService.deleteUserById(Types.ObjectId(req.params.userId));
   res.status(httpStatus.NO_CONTENT).send();
 });

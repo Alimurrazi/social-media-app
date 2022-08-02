@@ -8,10 +8,11 @@ const router = express.Router();
 
 router.route('/').post(auth('post'), validate(postValidation.createPost), postController.createPost); // createPost
 
-router.route('user/:userId').get(auth('post'), validate(postValidation.getPosts), postController.getPost); // getPost of a user
+router.route('user/:userId').get(auth('post'), validate(postValidation.getUserPosts), postController.getUserPost); // getPost of a user
 
 router.route(':postId').get(auth('post'), validate(postValidation.getPost), postController.getPost); // get specific post
-router.route(':postId').delete(auth('post'), validate(postValidation.getPost), postController.getUsers); // delete specific post
+router.route(':postId').patch(auth('post'), validate(postValidation.updatePost), postController.updatePost); // update specific post
+router.route(':postId').delete(auth('post'), validate(postValidation.deletePost), postController.deletePost); // delete specific post
 
 router.route('/:postId/like').patch(auth('post'), validate(postValidation.getPost), postController.followUser); // like post
 router.route('/:postId/unlike').patch(auth('post'), validate(postValidation.getPost), postController.unfollowUser); // unlike post
@@ -27,10 +28,10 @@ export default router;
 
 /**
  * @swagger
- * /:
+ * /post:
  *   post:
  *     summary: Create a post
- *     description: Anyone can post.
+ *     description: Only loggedIn user can post.
  *     tags: [Post]
  *     security:
  *       - bearerAuth: []
@@ -68,24 +69,25 @@ export default router;
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
- *
+ */
+
+
+/**
+ * @swagger
+ * post/user/{userId}:
  *   get:
- *     summary: Get all users
- *     description: Only admins can retrieve all users.
- *     tags: [Users]
+ *     summary: Get all post of a user
+ *     description: Anyone can fetch anyone's post.
+ *     tags: [Post]
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: query
- *         name: name
+ *       - in: path
+ *         name: userId
+ *         required: true
  *         schema:
  *           type: string
- *         description: User name
- *       - in: query
- *         name: role
- *         schema:
- *           type: string
- *         description: User role
+ *         description: User id
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -111,53 +113,7 @@ export default router;
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 results:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/User'
- *                 page:
- *                   type: integer
- *                   example: 1
- *                 limit:
- *                   type: integer
- *                   example: 10
- *                 totalPages:
- *                   type: integer
- *                   example: 1
- *                 totalResults:
- *                   type: integer
- *                   example: 1
- *       "401":
- *         $ref: '#/components/responses/Unauthorized'
- *       "403":
- *         $ref: '#/components/responses/Forbidden'
- */
-
-/**
- * @swagger
- * /users/{id}:
- *   get:
- *     summary: Get a user
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: User id
- *     responses:
- *       "200":
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Post'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

@@ -1,8 +1,8 @@
 import httpStatus from 'http-status';
 import { FilterQuery, Types } from 'mongoose';
 import { PaginateOptions, QueryResult } from '../models/plugins/paginate.plugin';
-import PostModel, { IPost, IPostDoc } from '../models/post.model';
-import UserModel, { IUser, IUserDoc, IUserMethods, IUserQueryWithHelper } from '../models/user.model';
+import PostModel, { IPost, IPostDoc, IPostQueryWithHelper } from '../models/post.model';
+import UserModel, { IUser, IUserMethods, IUserQueryWithHelper } from '../models/user.model';
 import ApiError from '../utils/ApiError';
 
 /**
@@ -39,50 +39,62 @@ export const queryUsers = async (
  * @param {Types.ObjectId} id
  * @returns {Promise<IUserQueryWithHelper>}
  */
-export const getUserById = async (id: Types.ObjectId): Promise<IUserQueryWithHelper> => {
+export const getPostById = async (id: Types.ObjectId): Promise<IPostQueryWithHelper> => {
+  return PostModel.findById(id);
+};
+
+/**
+ * Get user by id
+ * @param {Types.ObjectId} id
+ * @returns {Promise<IUserQueryWithHelper>}
+ */
+ export const getUserById = async (id: Types.ObjectId): Promise<IUserQueryWithHelper> => {
   return UserModel.findById(id);
 };
 
+/* Need to complete asap  */
 /**
- * Get user by email
- * @param {string} email
+ * Get post by user id
+ * @param {Types.ObjectId} userId
  * @returns {Promise<IUserQueryWithHelper>}
  */
-export const getUserByEmail = async (email: string): Promise<IUserQueryWithHelper> => {
-  return UserModel.findOne({ email });
+ export const getPostByUserId = async (query: any, userId: Types.ObjectId)  => {
+  const page = parseInt(query.page);
+  const limit = parseInt(query.limit);
+  const skipIndex = (page - 1) * limit;
+  return await PostModel.find({userId: userId}).sort({ id: 1 })
+  .limit(limit)
+  .skip(skipIndex);
 };
 
 /**
- * Update user by id
+ * Update post by id
  * @param {Types.ObjectId} id
- * @param {Partial<IUser>} updateBody
- * @returns {Promise<IUserDoc>}
+ * @param {Partial<IPost>} updateBody
+ * @returns {Promise<IPostDoc>}
  */
-export const updateUserById = async (id: Types.ObjectId, updateBody: Partial<IUser>): Promise<IUserDoc> => {
-  const user = await getUserById(id);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+export const updateUserById = async (id: Types.ObjectId, updateBody: Partial<IPost>): Promise<IPostDoc> => {
+  const post = await getPostById(id);
+  if (!post) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
-  if (updateBody.email && (await UserModel.isEmailTaken(updateBody.email, id))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-  }
-  Object.assign(user, updateBody);
-  await user.save();
-  return user;
+  Object.assign(post, updateBody);
+  await post.save();
+  return post;
 };
 
 /**
  * Delete user by id
- * @param {Types.ObjectId} userId
- * @returns {Promise<IUserDoc>}
+ * @param {Types.ObjectId} postId
+ * @returns {Promise<IPostDoc>}
  */
-export const deleteUserById = async (userId: Types.ObjectId): Promise<IUserDoc> => {
-  const user = await getUserById(userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+export const deletePostById = async (postId: Types.ObjectId): Promise<IPostDoc> => {
+  const post = await getPostById(postId);
+  if (!post) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
-  await user.remove();
-  return user;
+  await post.remove();
+  return post;
 };
 
 /**

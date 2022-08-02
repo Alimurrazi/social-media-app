@@ -10,7 +10,7 @@ export const createPost = {
   }),
 };
 
-export const getPosts = {
+export const getUserPosts = {
   query: Joi.object().keys({
     userId: Joi.string().custom(objectId),
     sortBy: Joi.string(),

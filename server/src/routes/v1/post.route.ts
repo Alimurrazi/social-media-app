@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.route('/').post(auth('post'), validate(postValidation.createPost), postController.createPost); // createPost
 
-router.route('user/:userId').get(auth('post'), validate(postValidation.getUserPosts), postController.getUserPost); // getPost of a user
+router.route('user/:userId').get(auth('post'), validate(postValidation.getUserPosts), postController.getUserPost); // get all Post of a user
 
 router.route(':postId').get(auth('post'), validate(postValidation.getPost), postController.getPost); // get specific post
 router.route(':postId').patch(auth('post'), validate(postValidation.updatePost), postController.updatePost); // update specific post
@@ -70,7 +70,6 @@ export default router;
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  */
-
 
 /**
  * @swagger

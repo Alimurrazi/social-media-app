@@ -1,8 +1,7 @@
 import httpStatus from 'http-status';
-import { FilterQuery, Types } from 'mongoose';
-import { PaginateOptions, QueryResult } from '../models/plugins/paginate.plugin';
+import { Types } from 'mongoose';
 import PostModel, { IPost, IPostDoc, IPostQueryWithHelper } from '../models/post.model';
-import UserModel, { IUser, IUserMethods, IUserQueryWithHelper } from '../models/user.model';
+import UserModel, { IUserQueryWithHelper } from '../models/user.model';
 import ApiError from '../utils/ApiError';
 
 /**
@@ -12,26 +11,6 @@ import ApiError from '../utils/ApiError';
  */
 export const createPost = async (postBody: IPost): Promise<IPostDoc> => {
   return PostModel.create(postBody);
-};
-
-/**
- * Query for users
- * @param {FilterQuery<IUser>} filter - Mongo filter
- * @param {PaginateOptions} options - Query options
- * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
- * @param {number} [options.limit] - Maximum number of results per page (default = 10)
- * @param {number} [options.page] - Current page (default = 1)
- * @returns {Promise<QueryResult<IUser, IUserMethods>>}
- */
-export const queryUsers = async (
-  filter: FilterQuery<IUser>,
-  options: PaginateOptions
-): Promise<QueryResult<IUser, IUserMethods>> => {
-  const users =
-    typeof UserModel.paginate === 'function'
-      ? await UserModel.paginate(filter, options)
-      : { results: [], page: 0, limit: 0, totalPages: 0, totalResults: 0 };
-  return users;
 };
 
 /**
@@ -48,23 +27,23 @@ export const getPostById = async (id: Types.ObjectId): Promise<IPostQueryWithHel
  * @param {Types.ObjectId} id
  * @returns {Promise<IUserQueryWithHelper>}
  */
- export const getUserById = async (id: Types.ObjectId): Promise<IUserQueryWithHelper> => {
+export const getUserById = async (id: Types.ObjectId): Promise<IUserQueryWithHelper> => {
   return UserModel.findById(id);
 };
 
-/* Need to complete asap  */
 /**
  * Get post by user id
  * @param {Types.ObjectId} userId
  * @returns {Promise<IUserQueryWithHelper>}
  */
- export const getPostByUserId = async (query: any, userId: Types.ObjectId)  => {
-  const page = parseInt(query.page);
-  const limit = parseInt(query.limit);
+export const getPostByUserId = async (query: any, userId: Types.ObjectId) => {
+  // const page = parseInt(query.page);
+  // const limit = parseInt(query.limit);
+
+  const { page, limit } = query;
+
   const skipIndex = (page - 1) * limit;
-  return await PostModel.find({userId: userId}).sort({ id: 1 })
-  .limit(limit)
-  .skip(skipIndex);
+  return PostModel.find({ userId }).sort({ id: 1 }).limit(limit).skip(skipIndex);
 };
 
 /**
@@ -73,7 +52,7 @@ export const getPostById = async (id: Types.ObjectId): Promise<IPostQueryWithHel
  * @param {Partial<IPost>} updateBody
  * @returns {Promise<IPostDoc>}
  */
-export const updateUserById = async (id: Types.ObjectId, updateBody: Partial<IPost>): Promise<IPostDoc> => {
+export const updatePostById = async (id: Types.ObjectId, updateBody: Partial<IPost>): Promise<IPostDoc> => {
   const post = await getPostById(id);
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
@@ -84,7 +63,7 @@ export const updateUserById = async (id: Types.ObjectId, updateBody: Partial<IPo
 };
 
 /**
- * Delete user by id
+ * Delete post by id
  * @param {Types.ObjectId} postId
  * @returns {Promise<IPostDoc>}
  */

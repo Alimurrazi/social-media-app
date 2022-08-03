@@ -64,14 +64,22 @@ export const getTimelinePostByUserIds = async (query: any, userIds: Types.Object
 
 /**
  * Update post by id
- * @param {Types.ObjectId} id
+ * @param {Types.ObjectId} userId
+ * @param {Types.ObjectId} postId
  * @param {Partial<IPost>} updateBody
  * @returns {Promise<IPostDoc>}
  */
-export const updatePostById = async (id: Types.ObjectId, updateBody: Partial<IPost>): Promise<IPostDoc> => {
-  const post = await getPostById(id);
+export const updatePostById = async (
+  userId: Types.ObjectId,
+  postId: Types.ObjectId,
+  updateBody: Partial<IPost>
+): Promise<IPostDoc> => {
+  const post = await getPostById(postId);
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+  }
+  if (String(post.userId) !== String(userId)) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'You have no acess to update');
   }
   Object.assign(post, updateBody);
   await post.save();
@@ -80,13 +88,17 @@ export const updatePostById = async (id: Types.ObjectId, updateBody: Partial<IPo
 
 /**
  * Delete post by id
+ * @param {Types.ObjectId} userId
  * @param {Types.ObjectId} postId
  * @returns {Promise<IPostDoc>}
  */
-export const deletePostById = async (postId: Types.ObjectId): Promise<IPostDoc> => {
+export const deletePostById = async (userId: Types.ObjectId, postId: Types.ObjectId): Promise<IPostDoc> => {
   const post = await getPostById(postId);
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+  }
+  if (String(post.userId) !== String(userId)) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'You have no acess to delete');
   }
   await post.remove();
   return post;
@@ -113,21 +125,31 @@ export const followUserById = async (currentUserId: Types.ObjectId, userId: Type
 };
 
 /**
- * Follow user by id
+ * Like post with userId
  * @param {Types.ObjectId} currentUserId
- * @param {Types.ObjectId} userId
+ * @param {Types.ObjectId} postId
  * @returns {Promise<string>}
  */
-export const unfollowUserById = async (currentUserId: Types.ObjectId, userId: Types.ObjectId): Promise<string> => {
-  const currentUser = await getUserById(currentUserId);
-  const user = await getUserById(userId);
-  if (!user || !currentUser) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
-  if (!currentUser.followers.includes(userId)) {
-    await user.updateOne({ $pull: { followers: currentUserId } });
-    await currentUser.updateOne({ $pull: { followings: userId } });
+export const likePostByUserId = async (currentUserId: Types.ObjectId, postId: Types.ObjectId): Promise<string> => {
+  const post = await getPostById(postId);
+  if (post && !post.likes.includes(currentUserId)) {
+    await post.updateOne({ $push: { likes: currentUserId } });
     return 'succeed';
   }
-  throw new ApiError(httpStatus.BAD_REQUEST, 'current user already follow this user');
+  throw new ApiError(httpStatus.BAD_REQUEST, 'current user already liked this post');
+};
+
+/**
+ * Follow user by id
+ * @param {Types.ObjectId} currentUserId
+ * @param {Types.ObjectId} postId
+ * @returns {Promise<string>}
+ */
+export const unlikePostByUserId = async (currentUserId: Types.ObjectId, postId: Types.ObjectId): Promise<string> => {
+  const post = await getPostById(postId);
+  if (post && post.likes.includes(currentUserId)) {
+    await post.updateOne({ $pull: { likes: currentUserId } });
+    return 'succeed';
+  }
+  throw new ApiError(httpStatus.BAD_REQUEST, 'current user already unliked this post');
 };

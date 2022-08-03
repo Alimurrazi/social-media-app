@@ -99,12 +99,13 @@ export const followUserById = async (currentUserId: Types.ObjectId, userId: Type
   if (!user || !currentUser) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  if (!currentUser.followers.includes(userId)) {
+  if (currentUser.followings.includes(userId)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'current user already follow this user');
+  } else {
     await user.updateOne({ $push: { followers: currentUserId } });
     await currentUser.updateOne({ $push: { followings: userId } });
     return 'succeed';
   }
-  throw new ApiError(httpStatus.BAD_REQUEST, 'current user already follow this user');
 };
 
 /**

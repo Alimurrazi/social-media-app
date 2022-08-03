@@ -3,10 +3,8 @@ import { objectId } from './custom.validation';
 
 export const createPost = {
   body: Joi.object().keys({
-    userId: Joi.string().required().custom(objectId),
-    description: Joi.string(),
-    img: Joi.string(),
-    //  likes: Joi.array().items(Joi.string()),
+    description: Joi.string().required(),
+    img: Joi.string().optional().allow(''),
   }),
 };
 

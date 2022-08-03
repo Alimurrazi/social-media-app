@@ -6,16 +6,16 @@ import * as postController from '../../controllers/post.controller';
 
 const router = express.Router();
 
-router.route('/').post(auth('post'), validate(postValidation.createPost), postController.createPost); // createPost
+router.route('/').post(auth('post'), validate(postValidation.createPost), postController.createPost);
 
 router.route('user/:userId').get(auth('post'), validate(postValidation.getUserPosts), postController.getUserPost); // get all Post of a user
 
-router.route(':postId').get(auth('post'), validate(postValidation.getPost), postController.getPost); // get specific post
-router.route(':postId').patch(auth('post'), validate(postValidation.updatePost), postController.updatePost); // update specific post
-router.route(':postId').delete(auth('post'), validate(postValidation.deletePost), postController.deletePost); // delete specific post
+router.route('/:postId').get(auth('post'), validate(postValidation.getPost), postController.getPost);
+router.route('/:postId').patch(auth('post'), validate(postValidation.updatePost), postController.updatePost);
+router.route('/:postId').delete(auth('post'), validate(postValidation.deletePost), postController.deletePost);
 
-router.route('/:postId/like').patch(auth('post'), validate(postValidation.getPost), postController.followUser); // like post
-router.route('/:postId/unlike').patch(auth('post'), validate(postValidation.getPost), postController.unfollowUser); // unlike post
+router.route('/:postId/like').patch(auth('post'), validate(postValidation.getPost), postController.likePost);
+router.route('/:postId/unlike').patch(auth('post'), validate(postValidation.getPost), postController.unlikePost);
 
 export default router;
 

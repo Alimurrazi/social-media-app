@@ -20,6 +20,14 @@ export const getUsers = {
   }),
 };
 
+export const timeline = {
+  query: Joi.object().keys({
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 export const getUser = {
   params: Joi.object().keys({
     userId: Joi.string().custom(objectId),

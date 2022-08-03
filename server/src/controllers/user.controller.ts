@@ -67,3 +67,14 @@ export const unfollowUser = catchAsync(async (req: any, res): Promise<void> => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Loggedin user not found');
   }
 });
+
+// need to complete this function
+
+export const getTimeline = catchAsync(async (req: any, res): Promise<void> => {
+  if (req.user && req.user.id) {
+    const status = await userService.unfollowUserById(req.user.id, Types.ObjectId(req.params.userId));
+    res.send(status);
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Loggedin user not found');
+  }
+});

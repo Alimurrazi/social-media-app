@@ -24,6 +24,7 @@ router
 
 router.route('/:userId/follow').patch(auth('follow'), validate(userValidation.getUser), userController.followUser);
 router.route('/:userId/unfollow').patch(auth('follow'), validate(userValidation.getUser), userController.unfollowUser);
+router.route('/timeline').patch(auth('timeline'), validate(userValidation.timeline), userController.getTimeline);
 
 export default router;
 

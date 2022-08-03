@@ -47,6 +47,22 @@ export const getPostByUserId = async (query: any, userId: Types.ObjectId) => {
 };
 
 /**
+ * Get post by user id
+ * @param {any} query
+ * @param {Types.ObjectId} userIds
+ * @returns {Promise<IUserQueryWithHelper>}
+ */
+export const getTimelinePostByUserIds = async (query: any, userIds: Types.ObjectId[]) => {
+  const { page, limit } = query;
+
+  const skipIndex = (page - 1) * limit;
+  return PostModel.find({ userId: { $in: userIds } })
+    .sort({ id: 1 }) // need to sort by time
+    .limit(limit)
+    .skip(skipIndex);
+};
+
+/**
  * Update post by id
  * @param {Types.ObjectId} id
  * @param {Partial<IPost>} updateBody

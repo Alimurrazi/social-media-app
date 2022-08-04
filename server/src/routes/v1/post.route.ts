@@ -74,7 +74,7 @@ export default router;
 
 /**
  * @swagger
- * post/user/{userId}:
+ * /post/user/{userId}:
  *   get:
  *     summary: Get all post of a user
  *     description: Anyone can fetch anyone's post.
@@ -121,50 +121,58 @@ export default router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
- *   patch:
- *     summary: Update a user
- *     description: Logged in users can only update their own information. Only admins can update other users.
- *     tags: [Users]
+ */
+
+/**
+ * @swagger
+ * /post/{postId}:
+ *   get:
+ *     summary: Get post
+ *     description: Get specific post
+ *     tags: [Post]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: postId
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *                 format: email
- *                 description: must be unique
- *               password:
- *                 type: string
- *                 format: password
- *                 minLength: 8
- *                 description: At least one number and one letter
- *             example:
- *               name: fake name
- *               email: fake@example.com
- *               password: password1
+ *         description: Post Id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
- *       "400":
- *         $ref: '#/components/responses/DuplicateEmail'
+ *                $ref: '#/components/schemas/Post'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ *   patch:
+ *     summary: Update post
+ *     description: update specific post
+ *     tags: [Post]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Post Id
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/Post'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -173,18 +181,18 @@ export default router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a user
- *     description: Logged in users can delete only themselves. Only admins can delete other users.
- *     tags: [Users]
+ *     summary: Delete post
+ *     description: Delete specific post
+ *     tags: [Post]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: postId
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Post Id
  *     responses:
  *       "200":
  *         description: No content
@@ -198,20 +206,20 @@ export default router;
 
 /**
  * @swagger
- * /users/{id}/follow:
+ * /post/{postId}/like:
  *   patch:
- *     summary: Follow a user
- *     description: Logged in users can follow other users.
- *     tags: [Users]
+ *     summary: Like a post
+ *     description: Logged in users can like other user's post.
+ *     tags: [Post]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: postId
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Post id
  *     responses:
  *       "200":
  *         description: succeed
@@ -225,23 +233,67 @@ export default router;
 
 /**
  * @swagger
- * /users/{id}/unfollow:
+ * /post/{postId}/unlike:
  *   patch:
- *     summary: Unfollow a user
- *     description: Logged in users can unfollow other users.
- *     tags: [Users]
+ *     summary: Unlike a post
+ *     description: Logged in users can unlike other user's post which is liked alreday by him.
+ *     tags: [Post]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: postId
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Post id
  *     responses:
  *       "200":
  *         description: succeed
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /post/timeline/all:
+ *   patch:
+ *     summary: timeline of a user
+ *     description: the post of other users which are followed by the loggedIn user
+ *     tags: [Post]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *         description: sort by query in the form of field:desc/asc (ex. name:asc)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         default: 10
+ *         description: Maximum number of users
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/Post'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

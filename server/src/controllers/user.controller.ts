@@ -4,7 +4,6 @@ import pick from '../utils/pick';
 import ApiError from '../utils/ApiError';
 import catchAsync from '../utils/catchAsync';
 import * as userService from '../services/user.service';
-import * as postService from '../services/post.service';
 import { IUser } from '../models/user.model';
 import { PaginateOptions } from '../models/plugins/paginate.plugin';
 
@@ -64,20 +63,6 @@ export const unfollowUser = catchAsync(async (req: any, res): Promise<void> => {
   if (req.user && req.user.id) {
     const status = await userService.unfollowUserById(req.user.id, Types.ObjectId(req.params.userId));
     res.send(status);
-  } else {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Loggedin user not found');
-  }
-});
-
-export const getTimeline = catchAsync(async (req: any, res): Promise<void> => {
-  if (req.user && req.user.id) {
-    const loggedinUser = await userService.getUserById(req.user.id);
-    if (loggedinUser) {
-      const status = await postService.getTimelinePostByUserIds(req.user.id, loggedinUser.followings);
-      res.send(status);
-    } else {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Loggedin user not found');
-    }
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Loggedin user not found');
   }

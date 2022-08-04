@@ -24,7 +24,7 @@ export const getPost = catchAsync(async (req, res): Promise<void> => {
 });
 
 export const getUserPost = catchAsync(async (req, res): Promise<void> => {
-  const post = await postService.getPostByUserId(req.query, Types.ObjectId(req.params.postId));
+  const post = await postService.getPostByUserId(req.query, Types.ObjectId(req.params.userId));
   res.send(post);
 });
 
@@ -51,6 +51,20 @@ export const unlikePost = catchAsync(async (req: any, res): Promise<void> => {
   if (req.user && req.user.id) {
     const status = await postService.unlikePostByUserId(req.user.id, Types.ObjectId(req.params.postId));
     res.send(status);
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Loggedin user not found');
+  }
+});
+
+export const getTimeline = catchAsync(async (req: any, res): Promise<void> => {
+  if (req.user && req.user.id) {
+    const loggedinUser = await postService.getUserById(req.user.id);
+    if (loggedinUser) {
+      const status = await postService.getTimelinePostByUserIds(req.user.id, loggedinUser.followings);
+      res.send(status);
+    } else {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Loggedin user not found');
+    }
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Loggedin user not found');
   }

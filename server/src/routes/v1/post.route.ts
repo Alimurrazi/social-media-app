@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.route('/').post(auth('post'), validate(postValidation.createPost), postController.createPost);
 
-router.route('user/:userId').get(auth('post'), validate(postValidation.getUserPosts), postController.getUserPost); // get all Post of a user
+router.route('/user/:userId').get(auth('post'), validate(postValidation.getUserPosts), postController.getUserPost);
 
 router.route('/:postId').get(auth('post'), validate(postValidation.getPost), postController.getPost);
 router.route('/:postId').patch(auth('post'), validate(postValidation.updatePost), postController.updatePost);
@@ -16,6 +16,7 @@ router.route('/:postId').delete(auth('post'), validate(postValidation.deletePost
 
 router.route('/:postId/like').patch(auth('post'), validate(postValidation.getPost), postController.likePost);
 router.route('/:postId/unlike').patch(auth('post'), validate(postValidation.getPost), postController.unlikePost);
+router.route('/timeline/all').get(auth('timeline'), validate(postValidation.timeline), postController.getTimeline);
 
 export default router;
 

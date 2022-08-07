@@ -17,6 +17,14 @@ export const getUserPosts = {
   }),
 };
 
+export const timeline = {
+  query: Joi.object().keys({
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 export const getPost = {
   params: Joi.object().keys({
     postId: Joi.string().custom(objectId),

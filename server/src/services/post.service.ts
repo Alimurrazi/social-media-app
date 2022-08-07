@@ -37,13 +37,13 @@ export const getUserById = async (id: Types.ObjectId): Promise<IUserQueryWithHel
  * @returns {Promise<IUserQueryWithHelper>}
  */
 export const getPostByUserId = async (query: any, userId: Types.ObjectId) => {
-  // const page = parseInt(query.page);
-  // const limit = parseInt(query.limit);
-
-  const { page, limit } = query;
+  let { page, limit, sortBy } = query;
+  page = page || 1;
+  limit = limit || 10;
+  sortBy = sortBy || -1;
 
   const skipIndex = (page - 1) * limit;
-  return PostModel.find({ userId }).sort({ id: 1 }).limit(limit).skip(skipIndex);
+  return PostModel.find({ userId }).sort({ createdAt: sortBy }).limit(limit).skip(skipIndex);
 };
 
 /**
@@ -53,11 +53,14 @@ export const getPostByUserId = async (query: any, userId: Types.ObjectId) => {
  * @returns {Promise<IUserQueryWithHelper>}
  */
 export const getTimelinePostByUserIds = async (query: any, userIds: Types.ObjectId[]) => {
-  const { page, limit } = query;
+  let { page, limit, sortBy } = query;
+  page = page || 1;
+  limit = limit || 10;
+  sortBy = sortBy || -1;
 
   const skipIndex = (page - 1) * limit;
   return PostModel.find({ userId: { $in: userIds } })
-    .sort({ id: 1 }) // need to sort by time
+    .sort({ createdAt: sortBy })
     .limit(limit)
     .skip(skipIndex);
 };

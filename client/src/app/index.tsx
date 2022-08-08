@@ -13,6 +13,7 @@ import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { GlobalStyle } from '../styles/global-styles';
 
 import { HomePage } from './pages/HomePage/Loadable';
+import { UserAccessPage } from './pages/UserAccessPage/Loadable';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { useTranslation } from 'react-i18next';
 
@@ -22,7 +23,7 @@ export function App() {
     <BrowserRouter>
       <Helmet
         titleTemplate="%s - React Boilerplate"
-        defaultTitle="React Boilerplate"
+        defaultTitle="React Boilerplate11"
         htmlAttributes={{ lang: i18n.language }}
       >
         <meta name="description" content="A React Boilerplate application" />
@@ -30,6 +31,11 @@ export function App() {
 
       <Switch>
         <Route exact path={process.env.PUBLIC_URL + '/'} component={HomePage} />
+        <Route
+          exact
+          path={process.env.PUBLIC_URL + '/user-access'}
+          component={UserAccessPage}
+        />
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />

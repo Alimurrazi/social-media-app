@@ -1,10 +1,11 @@
-import { NavBar } from 'app/components/NavBar';
 import { PageWrapper } from 'app/components/PageWrapper';
 import { Helmet } from 'react-helmet-async';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { LoginPage } from './Pages/LoginPage/index';
 
 export function UserAccessPage() {
+  let { path, url } = useRouteMatch();
+
   return (
     <>
       <Helmet>
@@ -12,14 +13,12 @@ export function UserAccessPage() {
         <meta name="LoginPage" content="User must login to view the content" />
       </Helmet>
       <PageWrapper>
-        <div>Hello qo</div>
-        <Router>
-          <Switch>
-            <Route path="/login">
-              <LoginPage />
-            </Route>
-          </Switch>
-        </Router>
+        <Link to={`${url}/login`}>Login page</Link>
+        <Switch>
+          <Route path={`${path}/login`}>
+            <LoginPage></LoginPage>
+          </Route>
+        </Switch>
       </PageWrapper>
     </>
   );

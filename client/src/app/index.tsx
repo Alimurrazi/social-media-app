@@ -6,16 +6,15 @@
  * contain code that should be seen on all pages. (e.g. navigation bar)
  */
 
-import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { GlobalStyle } from '../styles/global-styles';
 
-import { HomePage } from './pages/HomePage/Loadable';
-import { UserAccessPage } from './pages/UserAccessPage/Loadable';
-import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { useTranslation } from 'react-i18next';
+import { HomePage } from './pages/HomePage/Loadable';
+import { NotFoundPage } from './pages/NotFoundPage/Loadable';
+import { UserAccessPage } from './pages/UserAccessPage/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -23,7 +22,7 @@ export function App() {
     <BrowserRouter>
       <Helmet
         titleTemplate="%s - React Boilerplate"
-        defaultTitle="React Boilerplate11"
+        defaultTitle="React Boilerplate"
         htmlAttributes={{ lang: i18n.language }}
       >
         <meta name="description" content="A React Boilerplate application" />
@@ -32,7 +31,6 @@ export function App() {
       <Switch>
         <Route exact path={process.env.PUBLIC_URL + '/'} component={HomePage} />
         <Route
-          exact
           path={process.env.PUBLIC_URL + '/user-access'}
           component={UserAccessPage}
         />

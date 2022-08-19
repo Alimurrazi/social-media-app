@@ -7,7 +7,7 @@
  */
 
 import { Helmet } from 'react-helmet-async';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { GlobalStyle } from '../styles/global-styles';
 
@@ -28,14 +28,14 @@ export function App() {
         <meta name="description" content="A React Boilerplate application" />
       </Helmet>
 
-      <Switch>
-        <Route exact path={process.env.PUBLIC_URL + '/'} component={HomePage} />
+      <Routes>
+        <Route path={process.env.PUBLIC_URL + '/'} element={<HomePage />} />
         <Route
           path={process.env.PUBLIC_URL + '/user-access'}
-          component={UserAccessPage}
+          element={<UserAccessPage />}
         />
-        <Route component={NotFoundPage} />
-      </Switch>
+        <Route element={<NotFoundPage />} />
+      </Routes>
       <GlobalStyle />
     </BrowserRouter>
   );

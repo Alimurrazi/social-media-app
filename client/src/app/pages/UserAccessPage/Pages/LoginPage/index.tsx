@@ -5,7 +5,7 @@ export function LoginPage() {
   return (
     <>
       <Helmet>
-        <title>Home Page</title>
+        <title>Login Page</title>
         <meta name="LoginPage" content="User must login to view the content" />
       </Helmet>
       <PageWrapper>

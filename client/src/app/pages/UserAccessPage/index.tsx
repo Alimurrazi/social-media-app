@@ -1,10 +1,16 @@
 import { PageWrapper } from 'app/components/PageWrapper';
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
+//import { useRouteMatch } from 'react-router-dom';
+import { Link, Route, Outlet, Routes } from 'react-router-dom';
 import { LoginPage } from './Pages/LoginPage/index';
 
 export function UserAccessPage() {
-  let { path, url } = useRouteMatch();
+  //let { path, url } = useRouteMatch();
+
+  // useEffect(() => {
+  //   console.log(path);
+  // }, [path, url]);
 
   return (
     <>
@@ -13,12 +19,12 @@ export function UserAccessPage() {
         <meta name="LoginPage" content="User must login to view the content" />
       </Helmet>
       <PageWrapper>
-        <Link to={`${url}/login`}>Login page</Link>
-        <Switch>
-          <Route path={`${path}/login`}>
-            <LoginPage></LoginPage>
-          </Route>
-        </Switch>
+        <div>Hello world</div>
+        {/* <Link to={`login`}>Login page</Link>
+        <Outlet />
+        <Routes>
+          <Route path="login" element={<LoginPage />}></Route>
+        </Routes> */}
       </PageWrapper>
     </>
   );

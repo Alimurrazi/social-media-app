@@ -31,7 +31,7 @@ export function App() {
       <Routes>
         <Route path={process.env.PUBLIC_URL + '/'} element={<HomePage />} />
         <Route
-          path={process.env.PUBLIC_URL + '/user-access'}
+          path={process.env.PUBLIC_URL + '/user-access/*'}
           element={<UserAccessPage />}
         />
         <Route element={<NotFoundPage />} />

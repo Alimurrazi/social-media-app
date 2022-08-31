@@ -20,11 +20,11 @@ export function UserAccessPage() {
       </Helmet>
       <PageWrapper>
         <div>Hello world</div>
-        {/* <Link to={`login`}>Login page</Link>
+        <Link to={`login`}>Login page</Link>
         <Outlet />
         <Routes>
           <Route path="login" element={<LoginPage />}></Route>
-        </Routes> */}
+        </Routes>
       </PageWrapper>
     </>
   );
